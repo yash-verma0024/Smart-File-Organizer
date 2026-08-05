@@ -1,4 +1,4 @@
-from path_manager import create_path
+from organizer.path_manager import create_path
 from pathlib import Path
 
 
