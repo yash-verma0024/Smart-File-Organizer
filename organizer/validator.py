@@ -1,6 +1,9 @@
 from organizer.path_manager import create_path
 from pathlib import Path
 
+"""
+Scan the file and validate it weather it is file folder readable or what
+"""
 
 def file_exist(path: str | Path) -> bool:
     path = create_path(path)
