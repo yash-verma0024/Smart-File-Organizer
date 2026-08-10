@@ -50,6 +50,6 @@ def organizer_folder(folder: str | Path) -> dict:
 # Testing the file
 
 if __name__ == "__main__":
-    folder = r"C:\Users\verma\Videos\New folder"
+    folder = r"C:\Users\verma\OneDrive\Pictures\New folder"
     print(organizer_folder(folder))
     print("Organization complete!")
