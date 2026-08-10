@@ -36,7 +36,156 @@ def insert_file(metadata: dict) -> None:
         cursor.close()
         connection.close()
 
-if __name__ == "__main__":
-    from organizer.metadata import extract_metadata
-    insert_file(extract_metadata(r"C:\Users\verma\OneDrive\Pictures\Github\Project\Smart-File-Organizer\organizer\classifier.py"))
-    print("Done")
+
+def search_by_extension(extension: str) -> list[dict]:
+    """
+    Return all indexed files matching the given extension
+    """
+    extension = extension.lower()
+
+    # establishing connections
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            SELECT id, 
+                file_name, 
+                extension, 
+                file_path, 
+                file_size, 
+                mime_type, 
+                created_at, 
+                modified_at
+            FROM files
+            WHERE extension = ?
+    """, (extension,))
+        
+        rows = cursor.fetchall()
+        results = []
+
+        for row in rows:
+            results.append({
+                "id" : row[0],
+                "file_name" : row[1],
+                "extension" : row[2],
+                "file_path" : row[3],
+                "file_size" : row[4],
+                "mime_type" : row[5],
+                "created_at" : row[6],
+                "modified_at" : row[7]
+            })
+
+        return results
+    finally:
+        cursor.close()
+        connection.close()
+
+
+def search_by_name(file_name: str) -> list[dict]:
+    """
+    Return all indexed files matching the given file name.
+    """
+    # Setting up connections
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            SELECT id,
+                file_name, 
+                extension, 
+                file_path, 
+                file_size, 
+                mime_type, 
+                created_at, 
+                modified_at
+            FROM files
+            WHERE file_name = ?
+        """, (file_name,))
+
+        rows = cursor.fetchall()
+        results = []
+        for name in rows:
+            results.append({
+                "id" : name[0],
+                "file_name" : name[1],
+                "extension" : name[2],
+                "file_path" : name[3],
+                "file_size" : name[4],
+                "mime_type" : name[5],
+                "created_at" : name[6],
+                "modified_at" : name[7],
+            })
+
+        return results
+    finally:
+        cursor.close()
+        connection.close()
+
+
+def update_file_path(file_id: int, new_path: str) -> None:
+    """
+    Update the stored path of an indexed file
+    """
+
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            UPDATE files
+            SET file_path = ?
+            WHERE id = ?
+        """, 
+        (new_path, file_id, ))
+
+        connection.commit()
+    finally:
+        cursor.close()
+        connection.close()
+
+
+def search_by_path(file_path: str) -> list[dict]:
+    """
+    Return all indexes files matching the given file path
+    """
+
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            SELECT id,
+                file_name, 
+                extension, 
+                file_path, 
+                file_size, 
+                mime_type, 
+                created_at, 
+                modified_at
+            FROM files
+            WHERE file_path = ?
+        """,
+        (file_path,))
+
+        rows = cursor.fetchall()
+        results = []
+
+        for row in rows:
+            results.append({
+                "id" : row[0],
+                "file_name" : row[1],
+                "extension" : row[2],
+                "file_path" : row[3],
+                "file_size" : row[4],
+                "mime_type" : row[5],
+                "created_at" : row[6],
+                "modified_at" : row[7],
+            })
+
+        return results
+    finally:
+        cursor.close()
+        connection.close()
+        
