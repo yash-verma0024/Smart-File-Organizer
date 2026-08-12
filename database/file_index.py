@@ -17,16 +17,18 @@ def insert_file(metadata: dict) -> None:
                 extension,
                 file_path,
                 file_size,
+                file_hash,
                 mime_type,
                 created_at,
                 modified_at
             )
-            VALUES (?,?,?,?,?,?,?)
+            VALUES (?,?,?,?,?,?,?,?)
         """, (
             metadata["stem"],
             metadata["extension"],
             metadata["path"],
             metadata["size"],
+            metadata["hash"],
             None,
             metadata["created_at"],
             metadata["modified_at"]
@@ -50,12 +52,13 @@ def search_by_extension(extension: str) -> list[dict]:
     try:
         cursor.execute("""
             SELECT id, 
-                file_name, 
-                extension, 
-                file_path, 
-                file_size, 
-                mime_type, 
-                created_at, 
+                file_name,
+                extension,
+                file_path,
+                file_size,
+                file_hash,
+                mime_type,
+                created_at,
                 modified_at
             FROM files
             WHERE extension = ?
@@ -71,9 +74,10 @@ def search_by_extension(extension: str) -> list[dict]:
                 "extension" : row[2],
                 "file_path" : row[3],
                 "file_size" : row[4],
-                "mime_type" : row[5],
-                "created_at" : row[6],
-                "modified_at" : row[7]
+                "file_hash" : row[5],
+                "mime_type" : row[6],
+                "created_at" : row[7],
+                "modified_at" : row[8]
             })
 
         return results
@@ -93,12 +97,13 @@ def search_by_name(file_name: str) -> list[dict]:
     try:
         cursor.execute("""
             SELECT id,
-                file_name, 
-                extension, 
-                file_path, 
-                file_size, 
-                mime_type, 
-                created_at, 
+                file_name,
+                extension,
+                file_path,
+                file_size,
+                file_hash,
+                mime_type,
+                created_at,
                 modified_at
             FROM files
             WHERE file_name = ?
@@ -113,9 +118,10 @@ def search_by_name(file_name: str) -> list[dict]:
                 "extension" : name[2],
                 "file_path" : name[3],
                 "file_size" : name[4],
-                "mime_type" : name[5],
-                "created_at" : name[6],
-                "modified_at" : name[7],
+                "file_hash" : name[5],
+                "mime_type" : name[6],
+                "created_at" : name[7],
+                "modified_at" : name[8]
             })
 
         return results
@@ -157,12 +163,13 @@ def search_by_path(file_path: str) -> list[dict]:
     try:
         cursor.execute("""
             SELECT id,
-                file_name, 
-                extension, 
-                file_path, 
-                file_size, 
-                mime_type, 
-                created_at, 
+                file_name,
+                extension,
+                file_path,
+                file_size,
+                file_hash,
+                mime_type,
+                created_at,
                 modified_at
             FROM files
             WHERE file_path = ?
@@ -179,13 +186,58 @@ def search_by_path(file_path: str) -> list[dict]:
                 "extension" : row[2],
                 "file_path" : row[3],
                 "file_size" : row[4],
-                "mime_type" : row[5],
-                "created_at" : row[6],
-                "modified_at" : row[7],
+                "file_hash" : row[5],
+                "mime_type" : row[6],
+                "created_at" : row[7],
+                "modified_at" : row[8]
             })
 
         return results
     finally:
         cursor.close()
         connection.close()
-        
+
+
+def search_by_hash(file_hash: str) -> list[dict]:
+    """
+    Return all indexes files matching the given file hash
+    """
+
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            SELECT id,
+                file_name,
+                extension,
+                file_path,
+                file_size,
+                file_hash,
+                mime_type,
+                created_at,
+                modified_at
+            FROM files
+            WHERE file_hash = ?
+        """,
+        (file_hash,))
+
+        rows = cursor.fetchall()
+        results = []
+        for row in rows:
+            results.append({
+                "id" : row[0],
+                "file_name" : row[1],
+                "extension" : row[2],
+                "file_path" : row[3],
+                "file_size" : row[4],
+                "file_hash" : row[5],
+                "mime_type" : row[6],
+                "created_at" : row[7],
+                "modified_at" : row[8]
+            })
+
+        return results
+    finally:
+        cursor.close()
+        connection.close()
