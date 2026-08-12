@@ -19,6 +19,7 @@ def create_tables():
                 extension TEXT NOT NULL,
                 file_path TEXT NOT NULL,
                 file_size INTEGER NOT NULL,
+                file_hash TEXT NOT NULL,
                 mime_type TEXT,
                 created_at TEXT,
                 modified_at TEXT
