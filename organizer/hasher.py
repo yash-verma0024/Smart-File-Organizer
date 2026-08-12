@@ -12,7 +12,7 @@ def calculate_hash(path: str | Path) -> str:
 
     # Validating file
     if not is_file(path):
-        raise FileNotFoundError("Unable to Find find.")
+        raise FileNotFoundError("Unable to Find the specific file.")
 
     # Create hash object 
     file_hash = hashlib.sha256()
