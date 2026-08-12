@@ -2,6 +2,7 @@ from organizer.path_manager import create_path
 from organizer.validator import is_file
 from pathlib import Path
 from datetime import datetime
+from organizer.hasher import calculate_hash
 
 def extract_metadata(path: str | Path) -> dict:
     """
@@ -23,6 +24,7 @@ def extract_metadata(path: str | Path) -> dict:
         "parent" : str(path.parent),
         "path" : str(path.resolve()),
         "size" : file_stat.st_size,
+        "hash" : calculate_hash(path),
         "created_at": datetime.fromtimestamp(file_stat.st_ctime).isoformat(sep=" ", timespec="seconds"),
         "modified_at": datetime.fromtimestamp(file_stat.st_mtime).isoformat(sep=" ", timespec="seconds"),
     }
