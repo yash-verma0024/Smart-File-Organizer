@@ -1,5 +1,24 @@
 from database.connection import get_connection
 
+def see_database():
+    """
+    See All records from the database
+    """
+    # Establish database connection
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    try:
+        # view all record
+        cursor.execute("""
+            SELECT * FROM files
+        """)
+        connection.commit()
+    finally:
+        cursor.close()
+        connection.close()
+
+
 def insert_file(metadata: dict) -> None:
     """
     Insert one file's metadata as a record in the files table.
@@ -241,3 +260,66 @@ def search_by_hash(file_hash: str) -> list[dict]:
     finally:
         cursor.close()
         connection.close()
+
+
+def search_by_condiation(column_name: str, condition: str) -> list[dict]:
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            SELECT id,
+                file_name,
+                extension,
+                file_path,
+                file_size,
+                file_hash,
+                mime_type,
+                created_at,
+                modified_at
+            FROM files
+            ORDER BY ? ?
+        """,
+        (column_name, condition))
+
+        rows = cursor.fetchall()
+        results = []
+        for row in rows:
+            results.append({
+                "id" : row[0],
+                "file_name" : row[1],
+                "extension" : row[2],
+                "file_path" : row[3],
+                "file_size" : row[4],
+                "file_hash" : row[5],
+                "mime_type" : row[6],
+                "created_at" : row[7],
+                "modified_at" : row[8]
+            })
+
+        return results
+    finally:
+        cursor.close()
+        connection.close()
+
+
+def sync_hash(metadata: dict) -> None:
+    """
+    Synchronize the database records using the file hash
+    """
+    existing_files = search_by_hash(metadata["hash"])
+
+    # File with this hash does not exist in database
+    if not existing_files:
+        insert_file(metadata)
+        return
+
+    # Existing Records
+    existing_file = existing_files[0]
+
+    # Same file content but different location
+    if existing_file["file_path"] != metadata["path"]:
+        update_file_path(
+            existing_file["id"],
+            metadata["path"]
+        )
