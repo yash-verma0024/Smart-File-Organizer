@@ -7,7 +7,6 @@ from organizer.hasher import calculate_hash
 def extract_metadata(path: str | Path) -> dict:
     """
     Extract metadata from a file.
-
     """
     path = create_path(path)
 
