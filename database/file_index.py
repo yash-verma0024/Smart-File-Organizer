@@ -13,7 +13,12 @@ def see_database():
         cursor.execute("""
             SELECT * FROM files
         """)
-        connection.commit()
+
+        rows = cursor.fetchall()
+        
+        for row in rows:
+            print(row)
+
     finally:
         cursor.close()
         connection.close()
