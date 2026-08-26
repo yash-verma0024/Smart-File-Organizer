@@ -63,6 +63,51 @@ def insert_file(metadata: dict) -> None:
         connection.close()
 
 
+def search_by_id(id: int) -> list[dict]:
+    """
+    Return all indexed files matching with the given id
+    """
+    # Establishing connections
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            SELECT id, 
+                file_name,
+                extension,
+                file_path,
+                file_size,
+                file_hash,
+                mime_type,
+                created_at,
+                modified_at
+            FROM files
+            WHERE id = ?
+        """, (id,))
+
+        rows = cursor.fetchall()
+        result = []
+
+        for row in rows:
+            result.append({
+                "id" : row[0],
+                "file_name" : row[1],
+                "extension" : row[2],
+                "file_path" : row[3],
+                "file_size" : row[4],
+                "file_hash" : row[5],
+                "mime_type" : row[6],
+                "created_at" : row[7],
+                "modified_at" : row[8]
+            })
+        
+        return result
+    finally:
+        cursor.close()
+        connection.close()
+
+
 def search_by_extension(extension: str) -> list[dict]:
     """
     Return all indexed files matching the given extension
