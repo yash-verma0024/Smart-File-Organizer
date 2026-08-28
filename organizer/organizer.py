@@ -14,7 +14,8 @@ def organizer_folder(folder: str | Path) -> dict:
     stats = {
         "Files_moved" : 0,
         "Files_skipped" : 0,
-        "Error_encountered" : 0
+        "Error_encountered" : 0,
+        "Moved_paths" : []
     }
 
     for item in scan_files:
@@ -35,8 +36,9 @@ def organizer_folder(folder: str | Path) -> dict:
                 )
 
             # 3.Call your imported move utility
-            move_file(source=item, destination=destination_dir)
+            moved_path = move_file(source=item, destination=destination_dir)
             stats["Files_moved"] += 1
+            stats["Moved_paths"].append(moved_path)
 
         except Exception as e:
             # Catching your custom raised error keeps the loop moving for other files

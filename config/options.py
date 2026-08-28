@@ -1,7 +1,6 @@
 CORE_OPTION = ("""
         1. Organize files in folder
         2. Check Database
-        3. Synchronize Database
 """)
 
 DATABASE_FOLDER = ("""

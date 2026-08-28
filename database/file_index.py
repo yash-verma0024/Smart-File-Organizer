@@ -1,6 +1,6 @@
 from database.connection import get_connection
 
-def see_database():
+def see_database() -> list[dict]:
     """
     See All records from the database
     """
@@ -15,9 +15,20 @@ def see_database():
         """)
 
         rows = cursor.fetchall()
-        
-        for row in rows:
-            print(row)
+        return [
+            {
+                "id": row[0],
+                "file_name": row[1],
+                "extension": row[2],
+                "file_path": row[3],
+                "file_size": row[4],
+                "file_hash": row[5],
+                "mime_type": row[6],
+                "created_at": row[7],
+                "modified_at": row[8]
+            }
+            for row in rows
+        ]
 
     finally:
         cursor.close()
@@ -32,7 +43,6 @@ def insert_file(metadata: dict) -> None:
     # Establish database connection
     connection = get_connection()
     cursor = connection.cursor()
-
     try:
         # Inserting values
         cursor.execute("""
@@ -221,6 +231,40 @@ def update_file_path(file_id: int, new_path: str) -> None:
         connection.close()
 
 
+def update_file(file_id: int, metadata: dict) -> None:
+    """
+    Update an indexed file's metadata.
+    """
+
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    try:
+        cursor.execute("""
+            UPDATE files
+            SET file_name = ?,
+                extension = ?,
+                file_path = ?,
+                file_size = ?,
+                file_hash = ?,
+                modified_at = ?
+            WHERE id = ?
+        """, (
+            metadata["stem"],
+            metadata["extension"],
+            metadata["path"],
+            metadata["size"],
+            metadata["hash"],
+            metadata["modified_at"],
+            file_id
+        ))
+
+        connection.commit()
+    finally:
+        cursor.close()
+        connection.close()
+
+
 def search_by_path(file_path: str) -> list[dict]:
     """
     Return all indexes files matching the given file path
@@ -353,23 +397,5 @@ def search_by_condiation(column_name: str, condition: str) -> list[dict]:
         connection.close()
 
 
-def sync_hash(metadata: dict) -> None:
-    """
-    Synchronize the database records using the file hash
-    """
-    existing_files = search_by_hash(metadata["hash"])
-
-    # File with this hash does not exist in database
-    if not existing_files:
-        insert_file(metadata)
-        return
-
-    # Existing Records
-    existing_file = existing_files[0]
-
-    # Same file content but different location
-    if existing_file["file_path"] != metadata["path"]:
-        update_file_path(
-            existing_file["id"],
-            metadata["path"]
-        )
+if __name__ == "__main__":
+    see_database()

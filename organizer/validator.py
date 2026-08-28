@@ -1,5 +1,7 @@
-from organizer.path_manager import create_path
 from pathlib import Path
+from operator import itemgetter
+
+from organizer.path_manager import create_path
 
 """
 Scan the file and validate it weather it is file folder readable or what
@@ -41,6 +43,12 @@ def is_writable(path: str | Path) -> bool:
             return True
     except (PermissionError, IsADirectoryError, FileNotFoundError):
         return False
+
+
+# Function for sorting the value of metadata 
+def sort_data(data, sort_column, descending=False):
+    return sorted(data, key=itemgetter(sort_column), reverse=descending)
+
 
 # Just for Checking code runs fine or not
 
