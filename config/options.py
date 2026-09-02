@@ -1,6 +1,7 @@
 CORE_OPTION = ("""
         1. Organize files in folder
         2. Check Database
+        3. View Graphs
 """)
 
 DATABASE_FOLDER = ("""
@@ -18,4 +19,10 @@ DATABASE_SEARCH = ("""
 DATABASE_SORT_SEARCH = ("""
         1. Search in Ascending order
         2. Search in Descending order
+""")
+
+GRAPH_OPTION = ("""
+        1. Graph for number of files vs extension
+        2. Graph for number of extension vs storage
+        3. Graph for files having most max size
 """)

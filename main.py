@@ -1,11 +1,12 @@
 from pathlib import Path
 
-from config.options import CORE_OPTION, DATABASE_FOLDER, DATABASE_SEARCH, DATABASE_SORT_SEARCH
+from config.options import CORE_OPTION, DATABASE_FOLDER, DATABASE_SEARCH, DATABASE_SORT_SEARCH, GRAPH_OPTION
 from database.file_index import *
 from database.schema import create_tables
 from organizer.organizer import organizer_folder
 from organizer.metadata import extract_metadata
 from organizer.validator import sort_data
+from visualisation.charts import *
 
 def main():
     """
@@ -78,10 +79,27 @@ def main():
             new_path = Path(input("Enter the new path: "))
             update_file_path(file_id, new_path)
 
+    elif option == 3:
+        print(GRAPH_OPTION)
+        graph_opt = int(input("Enter the option : "))
+
+        if graph_opt == 1:
+            file_count_graph()
+
+        elif graph_opt == 2:
+            storage_graph()
+
+        elif graph_opt == 3:
+            largest_files_graph()
+
+        else:
+            return "Invalid Input"
+
+
     else:
         return "Invalid Input"
 
 
 if __name__ == "__main__":
-    create_tables()
-    main()
+    # create_tables()
+    print(main())

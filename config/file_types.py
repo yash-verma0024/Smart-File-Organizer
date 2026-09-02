@@ -11,6 +11,7 @@ EXTENSION_TO_CATEGORY = {
     ".pdf" : "Documents",
     ".txt" : "Documents",
     ".xlsx" : "Documents",
+    ".xls" : "Documents",
 
     # Audio
     ".mp3" : "Audio",
@@ -26,5 +27,14 @@ EXTENSION_TO_CATEGORY = {
     ".zip" : "Archives",
     ".rar" : "Archives",
     ".7z" : "Archives",
-    ".tar" : "Archives"
+    ".tar" : "Archives",
+
+    # Coding
+    ".py" : "Python",
+    ".c" : "Python",
+    ".ipynb" : "Python",
+    ".js" : "Python",
+    ".html" : "Python",
+    ".css" : "Python",
+    "cpp" : "Python"
 }
