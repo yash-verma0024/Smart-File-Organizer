@@ -1,3 +1,4 @@
+<img width="489" height="510" alt="image" src="https://github.com/user-attachments/assets/59d7470b-b2cd-486e-81b9-181171687692" />
 # 📁 Smart-File-Organizer
 
 > A powerful Python-based tool that automatically organizes files into categorized folders by type. Built with clean architecture, comprehensive database tracking, and beautiful visualizations to solve real-world file management challenges.
